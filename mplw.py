@@ -146,7 +146,7 @@ OPTIONS
                 #grid.linewidth   :   0.5     # in points
 
                 # MPL bug? not all edges(borders) are drawn
-                savefig(outfile, facecolor='0.95', edgecolor='0.8', transparent=True)
+                savefig(outfile, transparent=True)
                 # TODO axes.linewidth      : 1.0     # edge linewidth
             else:
                 savefig(outfile)
