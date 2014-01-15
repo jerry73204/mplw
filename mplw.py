@@ -19,11 +19,11 @@ class Application():
     '''
 OPTIONS
     -s OUTFILE, --style=OUTFILE
-        plot style 
+        plot style
 
     -o OUTFILE, --outfile=OUTFILE
         The file name of the output file. If not specified the output file is
-        named like INFILE but with a .png file name extension.
+        named like INFILE but with a .pdf file name extension.
 
     -v, --verbose
         Verbosely print processing information to stderr.
@@ -51,7 +51,7 @@ OPTIONS
             help="verbose output"),
         ]
 
-        self.parser = OptionParser( usage=self.usage, 
+        self.parser = OptionParser( usage=self.usage,
                                     option_list=self.option_list)
         (self.options, self.args) = self.parser.parse_args()
 
@@ -72,7 +72,7 @@ OPTIONS
             raise EApp, 'failed command: %s' % cmd
 
     def run_for_real(self, infile, outfile):
-        '''Convert Graphviz notation in file infile to PNG file named outfile.'''
+        '''Convert Graphviz notation in file infile to PDF file named outfile.'''
 
         outfile = os.path.abspath(outfile)
         outdir = os.path.dirname(outfile)
@@ -102,7 +102,7 @@ OPTIONS
             embeded_data = False
 
             for  line in infile:
-                if   line.startswith('___'): 
+                if   line.startswith('___'):
                     embeded_data = True
                     break
                 eval_lines += line
@@ -110,14 +110,14 @@ OPTIONS
 
             ####  READ DATA
 
-            if  embeded_data: 
+            if  embeded_data:
                 m = []  # matrix
 
                 #  TODO replace csv with  http://matplotlib.sourceforge.net/api/mlab_api.html#matplotlib.mlab.csv2rec
                 # aslo see http://matplotlib.sourceforge.net/api/mlab_api.html
                 for row in csv.reader(infile, delimiter=',', quotechar="'", skipinitialspace=True):
                     if row:    # if not blank line
-                        m.append(row)  
+                        m.append(row)
 
                     # convert to float if it look like number
                     for i in range(len(m[-1])):
@@ -145,14 +145,15 @@ OPTIONS
                 #grid.linestyle   :   :       # dotted
                 #grid.linewidth   :   0.5     # in points
 
-                savefig(outfile, facecolor='0.95', edgecolor='0.8') # MPL bug? not all edges(borders) are drawn
+                # MPL bug? not all edges(borders) are drawn
+                savefig(outfile, facecolor='0.95', edgecolor='0.8', transparent=True)
                 # TODO axes.linewidth      : 1.0     # edge linewidth
             else:
                 savefig(outfile)
 
                 if    self.options.style != 'none' :
                     sys.stderr.write('mplw warning: unknown style - ignored')
-                   
+
             #########################################################
 
         finally:
@@ -173,7 +174,7 @@ OPTIONS
             infile = open(self.options.infile)
 
         if self.options.outfile is None:
-            outfile = os.path.splitext(self.options.infile)[0] + '.png'
+            outfile = os.path.splitext(self.options.infile)[0] + '.pdf'
         else:
             outfile = self.options.outfile
 
@@ -185,9 +186,9 @@ def benchmark(label, val, label_part=-1):
     ytick_pos = arange(len(val))+.5
     label.reverse()
     val.reverse()
-    # 
+    #
     fontsize = rcParams['font.size']
-    fixed_part = fontsize/72 * 3  
+    fixed_part = fontsize/72 * 3
 
     h = (len(val)+1.4)*bar_width + fixed_part
     gcf().set_figheight(h)
@@ -214,7 +215,7 @@ def auto_adjust(fig):
 
     if  axes[0].get_title():  # if there is a title  # FIXME: MPL bug? always true
         title_fontsize = matplotlib.font_manager.font_scalings[rcParams['axes.titlesize']] * fontsize
-        top_adjust = 1.0 - title_fontsize/72 * top_space  /h 
+        top_adjust = 1.0 - title_fontsize/72 * top_space  /h
         fig.subplots_adjust(top=top_adjust)
 
     # bottom,  xlabel
