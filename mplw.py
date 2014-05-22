@@ -81,6 +81,7 @@ OPTIONS
         if os.system(cmd):
             raise EApp, 'failed command: %s' % cmd
 
+
     def run_for_real(self, infile, outfile):
         '''Convert Graphviz notation in file infile to PDF file named outfile.'''
 
@@ -96,8 +97,7 @@ OPTIONS
 
 
         try:
-            #########################################################  lvv
-
+            #########################################################
             ####  check MPL version
 
             str_ver=matplotlib.__version__.split('.')
@@ -109,18 +109,18 @@ OPTIONS
             ####  READ PY CODE
 
             eval_lines=''
-            embeded_data = False
+            embedded_data = False
 
             for  line in infile:
                 if   line.startswith('___'):
-                    embeded_data = True
+                    embedded_data = True
                     break
                 eval_lines += line
 
 
             ####  READ DATA
 
-            if  embeded_data:
+            if  embedded_data:
                 m = []  # matrix
 
                 #  TODO replace csv with  http://matplotlib.sourceforge.net/api/mlab_api.html#matplotlib.mlab.csv2rec
@@ -197,7 +197,7 @@ def benchmark(label, val, label_part=-1):
     ytick_pos = arange(len(val))+.5
     label.reverse()
     val.reverse()
-    #
+
     fontsize = rcParams['font.size']
     fixed_part = fontsize/72 * 3
 
@@ -216,14 +216,14 @@ def benchmark(label, val, label_part=-1):
     barh(ytick_pos, val, align="center", height=0.6, color=bar_colors)
     gca().set_ybound(lower=ytick_pos[0]-0.7, upper=ytick_pos[-1]+0.7)
     gca().set_xbound(upper=max(val)*1.1)
-    rcParams['axes.labelsize'] = 'large'
+    rcParams['axes.labelsize'] = 'small'
 
 def auto_adjust(fig):
     axes =  fig.get_axes()
 
     h = fig.get_figheight()             # inch
     w = fig.get_figwidth()                  # inch
-    fontsize = rcParams['font.size']    # point
+    fontsize = rcParams['font.size']
     dpi = rcParams['savefig.dpi']       # point / inch
 
     # top,  title
