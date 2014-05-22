@@ -204,11 +204,16 @@ def benchmark(label, val, label_part=-1):
     h = (len(val)+1.4)*bar_width + fixed_part
     gcf().set_figheight(h)
 
-    #step = ytick_pos[1] - ytick_pos[0]
-    #gca().set_ylim(ytick_pos[0]-1, ytick_pos[-1]+1)
+    # Reference bar color is red whereas all other bars are blue
+    bar_colors = []
 
-    yticks(ytick_pos, label, fontsize='large')
-    barh(ytick_pos, val, align="center", height=0.6)
+    for l in label:
+        bar_color = 'r' if "bare-metal" in l else 'b'
+        bar_colors.append(bar_color)
+
+    yticks(ytick_pos, label, fontsize='small')
+
+    barh(ytick_pos, val, align="center", height=0.6, color=bar_colors)
     gca().set_ybound(lower=ytick_pos[0]-0.7, upper=ytick_pos[-1]+0.7)
     gca().set_xbound(upper=max(val)*1.1)
     rcParams['axes.labelsize'] = 'large'
