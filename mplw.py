@@ -11,6 +11,16 @@ from numpy  import *
 import csv
 import string
 
+
+def value_parser(x):
+    """Parse string value"""
+    try:
+        if x.lower() == "nan":
+           return nan
+        return float(x)
+    except:
+        return x
+
 class EApp(Exception):
     '''Application specific exception.'''
     pass
@@ -114,25 +124,25 @@ OPTIONS
                 m = []  # matrix
 
                 #  TODO replace csv with  http://matplotlib.sourceforge.net/api/mlab_api.html#matplotlib.mlab.csv2rec
-                # aslo see http://matplotlib.sourceforge.net/api/mlab_api.html
-                for row in csv.reader(infile, delimiter=',', quotechar="'", skipinitialspace=True):
-                    if row:    # if not blank line
-                        m.append(row)
-
-                    # convert to float if it look like number
-                    for i in range(len(m[-1])):
-                        if   len(m[-1][i].translate(string.maketrans('',''),' +-0123456789eE.')) == 0:
-                            m[-1][i] = float(m[-1][i])
+                # also see http://matplotlib.sourceforge.net/api/mlab_api.html
+                for row in csv.reader(
+                    infile,
+                    delimiter=',',
+                    quotechar="'",
+                    escapechar="\\",
+                    skipinitialspace=True
+                    ):
+                    # skip blank rows
+                    if row:
+                         m.append(map(value_parser, row))
 
                 c = [[row[i] for row in m] for i in range(len(m[0]))]   # transpose
 
             infile.close()
 
-
             ####  EVAL
 
             exec eval_lines
-
 
             if    self.options.style == 'asciidoc':
 
@@ -158,6 +168,7 @@ OPTIONS
 
         finally:
             os.chdir(saved_cwd)
+
 
     def run(self):
         if self.options.infile == '-':
