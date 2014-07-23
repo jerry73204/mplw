@@ -2,6 +2,7 @@
 
 import os, sys
 from optparse import *
+import syslog
 
 #from matplotlib.pyplot import barh, title, grid , savefig, yticks, xlabel
 
@@ -165,6 +166,10 @@ OPTIONS
                     sys.stderr.write('mplw warning: unknown style - ignored')
 
             #########################################################
+
+        except Exception, e:
+            syslog.openlog("mplw")
+            syslog.syslog(syslog.LOG_ALERT, "An exception occurred: %s" % e)
 
         finally:
             os.chdir(saved_cwd)
